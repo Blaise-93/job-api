@@ -1,0 +1,12 @@
+.env
+Rough
+js/secret.js
+secrets.js
+app
+/node_modules
+js/utils.js
+jest-unittest
+js/jaaa.js
+unitest
+node_modules
+package-lock.json
