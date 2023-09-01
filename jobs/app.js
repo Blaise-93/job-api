@@ -17,8 +17,8 @@ app.use(express.json());
 
 
 // routes
-app.use('/api/v1/auth', jobRoute)
-app.use('/api/v1/jobs', registerRoute);
+app.use('/api/v1/auth', registerRoute)
+app.use('/api/v1/jobs',  jobRoute);
 
 
 //app.use('/api/v1/products', productsRouter);
