@@ -2,13 +2,13 @@ const { CustomAPIError }  = require('./custom-error')
 const { StatusCodes } = require('http-status-codes')
 
 /** 
-*This class objects handles incomming bad request errors in our Task API functions
+*This class objects handles incomming NotFound errors in our Task API functions
 */
  
-class BadRequestError extends CustomAPIError {
+class NotFoundError extends CustomAPIError {
     constructor(message) {
         super(message)
-        this.statusCode = StatusCodes.BAD_REQUEST
+        this.statusCode = StatusCodes.NOT_FOUND
 
     }
 }
@@ -16,4 +16,4 @@ class BadRequestError extends CustomAPIError {
 
 // custom error instance function of each class.
 
-module.exports =  BadRequestError
+module.exports =  NotFoundError

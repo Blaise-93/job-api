@@ -1,31 +1,75 @@
 const Job = require('../models/jobs')
 const {StatusCodes} = require('http-status-codes')
-const { BadRequestError, CustomAPIError } = require('../errors')
+const { BadRequestError, NotFoundError } = require('../errors')
 
 
 const getAllJobs = async (req, res) => {
-    console.log(req.user.userId)
+  
     const jobs = await Job.find({createdBy: req.user.userId }).sort('position')
     res.status(StatusCodes.OK).json({jobs, count: jobs.length})
 }
 
 const getJob = async (req, res) => {
-    res.send('get a single job')
+    // let's destructure the object
+    // to get individual userId n parms
+    const {user: {userId}, params: {id:jobId } } = req
+
+    const job = await Job.findOne({
+        _id:jobId,
+        createdBy: userId
+    })
+
+    if (!job) {
+        throw new NotFoundError(`No job found with id ${jobId}`)
+    }
+    res.status(StatusCodes.OK).json({job})
 }
 
 const createJob = async (req, res) => {
     req.body.createdBy = req.user.userId
     const job = await Job.create(req.body)
-    console.log(job)
     res.status(StatusCodes.CREATED).json({job})
 }
 
 const updateJob = async (req, res) => {
-    res.send('update job')
+    const {
+        user : { userId}, 
+        body: { company, position},
+        params: { id: jobId }} = req
+
+    if(company === "" || position === '') {
+        throw new BadRequestError(`Kindly update the the job field (company and position) of your choice without empty words.`)
+    } 
+
+    const job = await Job.findOneAndUpdate({
+            _id: jobId, 
+            createdBy: userId
+        }, req.body,
+        {new: true, runValidators: true}
+     )
+
+    if (!job) {
+        throw new NotFoundError(`No job found with id ${jobId}`)
+    }
+    res.status(StatusCodes.OK).json({job})
 }
 
 const deleteJob = async (req, res) => {
-    res.send('delete job')
+    const {
+        user:{ userId },
+        params:{ id: jobId }
+    } = req
+
+    const job = await Job.findByIdAndRemove({
+        _id:jobId,
+        createdBy:userId 
+    })
+
+    if(!job) {
+        throw new NotFoundError(`No job with id ${ jobId }`)
+    }
+    // sending json is not neccessary cos we have deleted the job
+    res.status(StatusCodes.OK).send()
 }
 
 
