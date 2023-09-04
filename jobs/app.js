@@ -1,6 +1,16 @@
 require('dotenv').config();
 require('express-async-errors');
 
+
+// extra security -> middleware config
+const helmet = require('helmet')
+const cors = require("cors")
+const xss = require('xss-clean')
+const  rateLimit  = require('express-rate-limit')
+
+
+
+
 const express = require('express');
 const app = express();
 const registerRoute = require('./routes/auth')
@@ -13,7 +23,22 @@ const notFoundMiddleware = require('./middlewares/not-found');
 const errorMiddleware = require('./middlewares/error');
 
 // middleware
+app.use('trust proxy', 1)
+
+const limiter = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+})
+
+// Apply the rate limiting middleware to all requests
+app.use(limiter)
 app.use(express.json());
+//security
+app.use(helmet())
+app.use(cors())
+app.use(xss())
+
+
 
 
 // routes

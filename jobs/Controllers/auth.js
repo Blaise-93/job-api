@@ -5,7 +5,7 @@ const { BadRequestError, UnauthenticatedError } = require('../errors/index')
 const jwt = require('jsonwebtoken') 
 
 const register = async (req, res) => {
-
+try {    
     const { name, email, password } = req.body
     if(!name || !email || !password) {
         throw new BadRequestError('Please provide name, email and password')
@@ -20,7 +20,10 @@ const register = async (req, res) => {
                 {user:{name: user.name}, token }
             )
 } 
-
+ catch (error) {
+    console.log(error)
+}
+}
 
 const login = async (req, res)  => {
     const { email, password } = req.body

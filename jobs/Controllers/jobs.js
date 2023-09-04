@@ -38,7 +38,8 @@ const updateJob = async (req, res) => {
         params: { id: jobId }} = req
 
     if(company === "" || position === '') {
-        throw new BadRequestError(`Kindly update the the job field (company and position) of your choice without empty words.`)
+        throw new BadRequestError(`
+        Kindly update the the job field (company and position) of your choice without empty words.`)
     } 
 
     const job = await Job.findOneAndUpdate({

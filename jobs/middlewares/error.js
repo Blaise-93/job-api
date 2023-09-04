@@ -13,7 +13,6 @@ const errorHandlerMiddleware = (err, req, resp, next) => {
         statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
         msg: err.message || 'Something went wrong try again later'
     }
-
      // mongoose code error
      if(err.code && err.code === 11000) {
         // override the message
@@ -21,8 +20,18 @@ const errorHandlerMiddleware = (err, req, resp, next) => {
         please choose another value`
         customError.statusCode = 400
     }
-    
-    if(err instanceof  CustomAPIError) {
+
+    if(err.name === 'CastError') {
+        customError.msg = `No item found with id: ${ err.value }`
+        customError.statusCode = 404
+    }
+
+    if(err.name === "ValidationError") {
+        customError.msg = Object.values(err.errors).map(item => item.message).join(',')
+        customError.statusCode = 400
+    }
+        //not neccessary for now
+     if(err instanceof  CustomAPIError) {
         return resp.status(customError.statusCode)
             .json({msg: customError.msg})
     }
