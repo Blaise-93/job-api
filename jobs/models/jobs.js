@@ -8,7 +8,7 @@ const JobSchema = new mongoose.Schema({
 
     },
 
-    poaition:{
+    position:{
         type: String,
         required: [true, 'Please provide company name'],
         maxLength: 100
@@ -30,6 +30,6 @@ const JobSchema = new mongoose.Schema({
     }
 
 
-}, {timestamps:true})
+}, {timestamps: true})
 
-module.exports = JobSchema
+module.exports = mongoose.model('Job', JobSchema)

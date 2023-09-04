@@ -1,8 +1,12 @@
-const jobs = require('../models/jobs')
+const Job = require('../models/jobs')
 const {StatusCodes} = require('http-status-codes')
+const { BadRequestError, CustomAPIError } = require('../errors')
+
 
 const getAllJobs = async (req, res) => {
-    res.send('')
+    console.log(req.user.userId)
+    const jobs = await Job.find({createdBy: req.user.userId }).sort('position')
+    res.status(StatusCodes.OK).json({jobs, count: jobs.length})
 }
 
 const getJob = async (req, res) => {
@@ -10,10 +14,10 @@ const getJob = async (req, res) => {
 }
 
 const createJob = async (req, res) => {
-    //console.log(req.user)
-    //const job = await jobs.create(req.body)
-    //console.log(job)
-    res.status(StatusCodes.OK).json(req.user)
+    req.body.createdBy = req.user.userId
+    const job = await Job.create(req.body)
+    console.log(job)
+    res.status(StatusCodes.CREATED).json({job})
 }
 
 const updateJob = async (req, res) => {
