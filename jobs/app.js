@@ -5,7 +5,7 @@ const express = require('express');
 const app = express();
 const registerRoute = require('./routes/auth')
 const jobRoute = require('./routes/jobs')
-
+const authenticateUser = require('./middlewares/auth')
 const connectDB = require('./db/connect');
 //const productsRouter = require('./routes/products');
 
@@ -18,7 +18,7 @@ app.use(express.json());
 
 // routes
 app.use('/api/v1/auth', registerRoute)
-app.use('/api/v1/jobs',  jobRoute);
+app.use('/api/v1/jobs', authenticateUser, jobRoute);
 
 
 //app.use('/api/v1/products', productsRouter);

@@ -1,33 +1,32 @@
+const User = require('../models/Users')
 const jwt = require('jsonwebtoken')
+
 const { UnauthenticatedError } = require('../errors/index')
 
-const authenticationMiddleware = async (req, res, next) => {
-    console.log(req.headers.authorization)
-    const authHeader = req.headers.authorization
-    
+const auth = async (req, res, next) => {
+    //check header
+    authHeader = req.headers.authorization
     if(!authHeader || !authHeader.startsWith('Bearer')) {
-        throw new UnauthenticatedError('No token provided')
-    }
+        throw new UnauthenticatedError('Authentication invalid')
 
+    }
+    // split on the array and look on the single value
     const token = authHeader.split(' ')[1]
-    console.log(token)
-
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET)
-        console.log(decoded)
-        const { id, username } = decoded
-        // for user req
-        req.user = { id, username }
-        next()     
-  
-   
+        const payload = jwt.verify(token, process.env.JWT_SECRET)
+        //attach the user to the job routes
+
+        /* const user = User.findById(payload.id).select('password')
+        req.user = user
+
+        OR 
+         */
+        req.user = { userId: payload.userId, name:payload.name }
+         next()
     } catch (error) {
-        throw new UnauthenticatedError('Not authorized to access this route')
-   
+        throw new UnauthenticatedError("Aunthentication invalid")
     }
- 
-    next()
-        
+
 }
 
-module.exports = authenticationMiddleware
+module.exports = auth
