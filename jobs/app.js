@@ -23,7 +23,7 @@ const notFoundMiddleware = require('./middlewares/not-found');
 const errorMiddleware = require('./middlewares/error');
 
 // middleware
-app.use('trust proxy', 1)
+app.set('trust proxy')
 
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
@@ -38,7 +38,9 @@ app.use(helmet())
 app.use(cors())
 app.use(xss())
 
-
+app.get('/', (req, res) => {
+  res.send('Job API')
+})
 
 
 // routes
@@ -53,7 +55,7 @@ app.use('/api/v1/jobs', authenticateUser, jobRoute);
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);
 
-const port = 3000  || process.env.PORT ;
+const port =  process.env.PORT || 3000 ;
 
 const start = async () => {
   try {

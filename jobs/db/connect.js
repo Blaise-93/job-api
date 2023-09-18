@@ -1,7 +1,8 @@
+require("dotenv").config()
 const mongoose = require('mongoose');
 
 const connectDB = () => {
-  const url = 'mongodb://localhost:27017/job-api'
+  const url = process.env.MONGO_URL
   mongoose.connect(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,

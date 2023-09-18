@@ -4,8 +4,7 @@
   "description": "job api interview website",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js"
+    "start": "node app.js"
   },
   "keywords": [
     "javascript",
@@ -36,5 +35,8 @@
   "devDependencies": {
     "chai": "^4.3.7",
     "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": "16.x"
   }
 }
